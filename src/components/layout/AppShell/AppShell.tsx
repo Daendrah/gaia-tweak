@@ -3,8 +3,10 @@
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import React, { useEffect } from 'react';
 
-import Viewport from '@/components/features/Viewport/Viewport';
+import Editor from '@/components/features/Editor/Editor';
+import SettingsPanel from '@/components/features/Settings/SettingsPanel';
 import Header from '@/components/layout/Header/Header';
+import Notification from '@/components/layout/Notification/Notification';
 import { useUIStore } from '@/store/uiStore';
 
 export default function AppShell() {
@@ -22,19 +24,21 @@ export default function AppShell() {
   return (
     <div
       style={{
-        height: '100vh',
-        width: '100vw',
         display: 'flex',
         flexDirection: 'column',
+        height: '100vh',
+        width: '100vw',
       }}
     >
       <ThemeProvider theme={theme}>
         {/* Header Section */}
         <Header />
         {/* Content Section */}
-        <main style={{ flex: 1, minHeight: 0 }}>
-          <Viewport />
-        </main>
+        <Editor />
+        {/* Settings Panel */}
+        <SettingsPanel />
+        {/* Notification System */}
+        <Notification />
       </ThemeProvider>
     </div>
   );

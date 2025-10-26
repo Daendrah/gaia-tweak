@@ -18,12 +18,13 @@ export default function Header() {
         boxShadow: 'none',
         borderBottom: 1,
         borderColor: 'divider',
+        zIndex: theme => theme.zIndex.drawer + 1,
       }}
     >
       <Toolbar variant="dense" sx={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr' }}>
         {/* Logo and Title */}
         <AppLogo />
-        {/* Placeholder */}
+        {/* Diagnostics */}
         <Diagnostics />
         {/* Menu actions */}
         <UserMenu />
