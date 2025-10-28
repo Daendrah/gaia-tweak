@@ -1,21 +1,19 @@
 'use client';
 
-import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
-import RestartAltIcon from '@mui/icons-material/RestartAlt';
-import { Divider } from '@mui/material';
 import Paper from '@mui/material/Paper';
-import React from 'react';
+import React, { useMemo } from 'react';
 
 import IconButton from '@/components/common/IconButton';
+import { componentRegistry } from '@/lib/world/componentRegistry';
 import { useUIStore } from '@/store/uiStore';
-import { useWorldStore } from '@/store/worldStore';
 
 export default function Toolbar() {
-  const componentDefinitions = useUIStore(state => state.componentDefinitions);
   const selectedComponentKey = useUIStore(state => state.selectedComponentKey);
   const selectComponent = useUIStore(state => state.selectComponent);
-  const buildAll = useWorldStore(state => state.buildAll);
-  const resetAll = useWorldStore(state => state.resetAll);
+
+  const componentDefinitions = useMemo(() => {
+    return componentRegistry.getAllDefinitions();
+  }, []);
 
   return (
     <Paper
@@ -30,36 +28,20 @@ export default function Toolbar() {
         gap: 1,
       }}
     >
-      {Array.from(componentDefinitions.entries()).map(([key, definition]) => {
-        const isSelected = selectedComponentKey === key;
+      {componentDefinitions.map(definition => {
+        const isSelected = selectedComponentKey === definition.key;
         return (
           <IconButton
-            key={key}
+            key={definition.key}
             icon={React.createElement(definition.icon, { fontSize: 'small' })}
             tooltip={definition.name}
             ariaLabel={definition.name}
             color={isSelected ? 'primary' : 'inherit'}
             variant={isSelected ? 'contained' : 'text'}
-            onClick={() => selectComponent(key)}
+            onClick={() => selectComponent(definition.key)}
           />
         );
       })}
-      <Divider orientation="vertical" variant="fullWidth" flexItem />
-      <IconButton
-        icon={<AutoFixHighIcon fontSize="small" />}
-        color="primary"
-        variant={'text'}
-        tooltip="Generate All"
-        ariaLabel="Generate All"
-        onClick={buildAll}
-      />
-      <IconButton
-        icon={<RestartAltIcon fontSize="small" />}
-        color="error"
-        tooltip="Reset All"
-        ariaLabel="Reset All"
-        onClick={resetAll}
-      />
     </Paper>
   );
 }

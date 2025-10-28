@@ -5,15 +5,15 @@ import {
   SUN_VERTEX_SHADER,
 } from '@/lib/world/components/lighting/assets/sunShaders';
 import { getParameterValue } from '@/lib/world/parameters';
-import { BuildJob, BuildStep } from '@/types/buildTypes';
+import { GenerationCommand, CommandStep } from '@/types/generationTypes';
 import { ComponentBuilder } from '@/types/worldTypes';
 
 const SUN_LIGHT_NAME = 'sunLight';
 const SUN_MESH_NAME = 'sunMesh';
 
 export const lightingBuilder: ComponentBuilder = {
-  generateJob: (): BuildJob => {
-    const steps: BuildStep[] = [
+  generateCommand: (): GenerationCommand => {
+    const steps: CommandStep[] = [
       {
         name: 'Cleaning existing lighting',
         execute: async context => {

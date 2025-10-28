@@ -1,127 +1,98 @@
 import * as THREE from 'three';
 import { create } from 'zustand';
 
-import { useBuildJobStore } from '@/store/buildJobStore';
-import { ComponentBuilder, ParameterDefinition, ParameterValue } from '@/types/worldTypes';
-
-interface ComponentInstance {
-  params: Record<string, ParameterValue>;
-  active: boolean;
-  builder: ComponentBuilder;
-}
+import { componentRegistry } from '@/lib/world/componentRegistry';
+import { useCommandQueueStore } from '@/store/commandQueueStore';
+import { useComponentsStore } from '@/store/componentsStore';
+import { ParameterValue } from '@/types/worldTypes';
 
 interface WorldState {
   world: THREE.Scene | null;
-  componentInstances: Record<string, ComponentInstance>;
-  setWorld: (world: THREE.Scene) => void;
-  createComponentInstance: (
-    key: string,
-    params: ParameterDefinition[],
-    builder: ComponentBuilder
-  ) => void;
 
-  buildAll(): void;
-  resetAll(): void;
-  buildComponent(key: string): void;
-  resetComponent(key: string): void;
+  setWorld: (world: THREE.Scene) => void;
+
+  generateAll(): void;
+  clearAll(): void;
+  generateComponent(key: string): void;
+  clearComponent(key: string): void;
 }
 
 export const useWorldStore = create<WorldState>((set, get) => ({
   world: null,
-  componentInstances: {},
 
-  setWorld: world => set({ world }),
-  createComponentInstance: (key, params, builder) => {
-    function definitionToValues(params: ParameterDefinition[]): Record<string, ParameterValue> {
-      return params.reduce(
-        (acc, param) => {
-          acc[param.key] = param.value;
-          return acc;
-        },
-        {} as Record<string, ParameterValue>
-      );
-    }
+  setWorld: world => {
+    set({ world });
 
-    const values = definitionToValues(params);
-    const component: ComponentInstance = {
-      params: values,
-      active: false,
-      builder,
-    };
-
-    set(state => ({
-      componentInstances: {
-        ...state.componentInstances,
-        [key]: component,
-      },
-    }));
+    useComponentsStore.getState().initializeInstances();
   },
 
-  buildAll: () => {
-    const componentInstances = get().componentInstances;
-    Object.keys(componentInstances).forEach(key => {
-      get().buildComponent(key);
+  generateAll: () => {
+    const componentsStore = useComponentsStore.getState();
+    const componentKeys = componentsStore.getComponentKeys();
+    componentKeys.forEach(key => {
+      get().generateComponent(key);
     });
   },
 
-  resetAll: () => {
-    const componentInstances = get().componentInstances;
-    Object.keys(componentInstances).forEach(key => {
-      get().resetComponent(key);
+  clearAll: () => {
+    const componentsStore = useComponentsStore.getState();
+    const componentKeys = componentsStore.getComponentKeys();
+    componentKeys.forEach(key => {
+      get().clearComponent(key);
     });
   },
 
-  buildComponent: (key: string) => {
-    const { world, componentInstances } = get();
-    if (!world) {
-      console.error('World not initialized');
-      return;
+  generateComponent: (key: string) => {
+    const { world } = get();
+    if (!world) throw new Error('World not initialized');
+
+    const componentsStore = useComponentsStore.getState();
+    if (!componentsStore.hasComponent(key)) {
+      throw new Error(`Instance ${key} not found`);
     }
 
-    const instance = componentInstances[key];
-    if (!instance) {
-      console.error(`Component ${key} not found`);
-      return;
-    }
+    const builder = componentRegistry.getDescriptor(key)?.builder;
+    if (!builder) throw new Error(`Descriptor ${key} not found`);
 
-    const submitJob = useBuildJobStore.getState().submitJob;
-    const job = instance.builder.generateJob();
-    const context = { world, params: instance.params };
+    const submitCommand = useCommandQueueStore.getState().submitCommand;
+    const command = builder.generateCommand();
 
-    submitJob(job, context)
+    const descriptor = componentRegistry.getDescriptor(key);
+    if (!descriptor) throw new Error(`Descriptor ${key} not found`);
+
+    const params: Record<string, ParameterValue> = {};
+    descriptor.params.forEach(param => {
+      const value = componentsStore.getPendingValue(key, param.key);
+      if (value !== undefined) {
+        params[param.key] = value;
+      }
+    });
+
+    const context = { world, params };
+
+    submitCommand(command, context)
       .then(() => {
-        set(state => ({
-          componentInstances: {
-            ...state.componentInstances,
-            [key]: { ...state.componentInstances[key], active: true },
-          },
-        }));
+        componentsStore.applyChanges(key);
       })
       .catch((error: unknown) => {
-        console.error(`Build failed for component ${key}:`, error);
-        get().resetComponent(key);
+        console.error(`Generation failed for component ${key}:`, error);
+        get().clearComponent(key);
       });
   },
 
-  resetComponent: (key: string) => {
-    const { world, componentInstances } = get();
-    if (!world) {
-      console.error('World not initialized');
-      return;
+  clearComponent: (key: string) => {
+    const { world } = get();
+    if (!world) throw new Error('World not initialized');
+
+    const componentsStore = useComponentsStore.getState();
+    if (!componentsStore.hasComponent(key)) {
+      throw new Error(`Instance ${key} not found`);
     }
 
-    const instance = componentInstances[key];
-    if (!instance) {
-      console.error(`Component ${key} not found`);
-      return;
-    }
+    const builder = componentRegistry.getDescriptor(key)?.builder;
+    if (!builder) throw new Error(`Descriptor ${key} not found`);
 
-    instance.builder.reset(world);
-    set(state => ({
-      componentInstances: {
-        ...state.componentInstances,
-        [key]: { ...state.componentInstances[key], active: false },
-      },
-    }));
+    builder.reset(world);
+    componentsStore.clearComponent(key);
   },
 }));

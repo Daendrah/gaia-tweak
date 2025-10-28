@@ -2,22 +2,22 @@ import * as THREE from 'three';
 
 import { ParameterValue } from '@/types/worldTypes';
 
-export interface BuildContext {
+export interface CommandContext {
   world: THREE.Scene;
   params: Record<string, ParameterValue>;
 }
 
-export interface BuildStep {
+export interface CommandStep {
   name: string;
-  execute: (context: BuildContext) => Promise<void>;
+  execute: (context: CommandContext) => Promise<void>;
 }
 
-export interface BuildJob {
+export interface GenerationCommand {
   componentName: string;
-  steps: BuildStep[];
+  steps: CommandStep[];
 }
 
-export interface BuildStatus {
+export interface CommandStatus {
   componentName: string;
   stepName: string;
   currentStep: number;

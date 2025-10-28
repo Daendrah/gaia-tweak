@@ -4,7 +4,6 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import React, { useEffect } from 'react';
 
 import Editor from '@/components/features/Editor/Editor';
-import SettingsPanel from '@/components/features/Settings/SettingsPanel';
 import Header from '@/components/layout/Header/Header';
 import Notification from '@/components/layout/Notification/Notification';
 import { useUIStore } from '@/store/uiStore';
@@ -35,8 +34,6 @@ export default function AppShell() {
         <Header />
         {/* Content Section */}
         <Editor />
-        {/* Settings Panel */}
-        <SettingsPanel />
         {/* Notification System */}
         <Notification />
       </ThemeProvider>

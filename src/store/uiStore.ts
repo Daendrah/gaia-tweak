@@ -2,28 +2,18 @@ import { create } from 'zustand';
 
 type ThemeMode = 'light' | 'dark';
 
-interface ComponentDefinition {
-  name: string;
-  icon: React.ElementType;
-}
-
 interface UIState {
-  // Settings panel State
   settingsPanelOpened: boolean;
   toggleSettingsPanelState: (open: boolean) => void;
 
-  // Theme Management
   themeMode: ThemeMode;
   isThemeInitialized: boolean;
   initializeTheme: () => void;
   setThemeMode: (mode: ThemeMode) => void;
   toggleThemeMode: () => void;
 
-  // World Component Management
   selectedComponentKey: string | null;
-  componentDefinitions: Map<string, ComponentDefinition>;
   selectComponent: (key: string | null) => void;
-  addWorldComponent: (key: string, name: string, icon: React.ElementType) => void;
 }
 
 const getSystemTheme = (): ThemeMode => {
@@ -70,7 +60,6 @@ export const useUIStore = create<UIState>((set, get) => ({
   themeMode: 'light',
   isThemeInitialized: false,
   selectedComponentKey: null,
-  componentDefinitions: new Map<string, ComponentDefinition>(),
 
   toggleSettingsPanelState: (open: boolean) => {
     if (open) get().selectComponent(null);
@@ -104,14 +93,5 @@ export const useUIStore = create<UIState>((set, get) => ({
   selectComponent: (key: string | null) => {
     if (key !== null) get().toggleSettingsPanelState(false);
     set({ selectedComponentKey: key });
-  },
-
-  addWorldComponent: (key, name, icon) => {
-    const definitions = get().componentDefinitions;
-    if (definitions.get(key)) return;
-    definitions.set(key, { name, icon });
-    set({
-      componentDefinitions: new Map(definitions),
-    });
   },
 }));

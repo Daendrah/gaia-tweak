@@ -7,10 +7,10 @@ import IconButton from '@mui/material/IconButton';
 import Snackbar from '@mui/material/Snackbar';
 import React, { useEffect, useState } from 'react';
 
-import { useBuildJobStore } from '@/store/buildJobStore';
+import { useCommandQueueStore } from '@/store/commandQueueStore';
 
 export default function Notification() {
-  const queueStatus = useBuildJobStore(state => state.queueStatus);
+  const queueStatus = useCommandQueueStore(state => state.queueStatus);
   const [open, setOpen] = useState(false);
   const [previousStatus, setPreviousStatus] = useState<typeof queueStatus>(null);
 
@@ -42,7 +42,6 @@ export default function Notification() {
 
   const componentDisplayName = componentName || 'Component';
 
-  // Determine severity (for default icon)
   const getSeverity = () => {
     switch (status) {
       case 'success':
@@ -55,7 +54,6 @@ export default function Notification() {
     }
   };
 
-  // Get detail message
   const getMessage = () => {
     switch (status) {
       case 'in-progress':
@@ -69,7 +67,6 @@ export default function Notification() {
     }
   };
 
-  // Get action button/indicator
   const getAction = () => {
     switch (status) {
       case 'failed':

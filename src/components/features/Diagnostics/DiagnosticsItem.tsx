@@ -26,7 +26,7 @@ const DiagnosticsItem = memo<DiagnosticsItemProps>(({ icon, label, value, suffix
           border: 'none',
           color: theme => theme.palette.text.primary,
           '.MuiChip-icon': {
-            color: theme => theme.palette.info.main, // Code couleur pour l'état
+            color: theme => theme.palette.info.main,
           },
           px: 2,
         }}

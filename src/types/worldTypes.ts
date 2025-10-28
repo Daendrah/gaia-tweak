@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-import { BuildJob } from '@/types/buildTypes';
+import { GenerationCommand } from '@/types/generationTypes';
 
 export type ParameterValue = string | number | boolean;
 
@@ -26,7 +26,7 @@ export interface ParameterDefinition {
 }
 
 export interface ComponentBuilder {
-  generateJob: () => BuildJob;
+  generateCommand: () => GenerationCommand;
   reset: (world: THREE.Scene) => void;
   isActive: (world: THREE.Scene) => boolean;
 }

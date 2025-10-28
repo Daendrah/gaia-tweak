@@ -39,7 +39,7 @@ export default function AppLogo() {
       </Box>
 
       {/* Title */}
-      <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+      <Typography variant="h5" sx={{ cursor: 'default', fontWeight: 'bold' }}>
         Gaia Tweak
       </Typography>
     </Box>
