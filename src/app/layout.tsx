@@ -1,7 +1,9 @@
-import CssBaseline from '@mui/material/CssBaseline';
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
+
+import { Providers } from '@/app/providers';
+
+import '@/app/global.css';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -24,12 +26,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable}`}>
-        <AppRouterCacheProvider>
-          <CssBaseline />
-          {children}
-        </AppRouterCacheProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-interface DiagnosticsState {
+interface MetricsState {
   fps: number;
   memoryUsage: number;
   triangleCount: number;
@@ -9,7 +9,7 @@ interface DiagnosticsState {
   setStats: (fps: number, memoryUsage: number, triangleCount: number, drawCalls: number) => void;
 }
 
-export const useDiagnosticsStore = create<DiagnosticsState>((set, get) => ({
+export const useMetricsStore = create<MetricsState>((set, get) => ({
   fps: 0,
   memoryUsage: 0,
   triangleCount: 0,

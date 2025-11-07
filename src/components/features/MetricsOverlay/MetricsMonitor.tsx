@@ -3,7 +3,7 @@
 import { useFrame, useThree } from '@react-three/fiber';
 import { useRef } from 'react';
 
-import { useDiagnosticsStore } from '@/store/diagnosticsStore';
+import { useMetricsStore } from '@/store/metricsStore';
 
 interface PerformanceMemory {
   usedJSHeapSize: number;
@@ -11,9 +11,9 @@ interface PerformanceMemory {
   totalJSHeapSize: number;
 }
 
-export default function DiagnosticsMonitor() {
+export function MetricsMonitor() {
   const gl = useThree(state => state.gl);
-  const { setStats } = useDiagnosticsStore();
+  const { setStats } = useMetricsStore();
 
   const frameCount = useRef(0);
   const lastUpdate = useRef(performance.now());
