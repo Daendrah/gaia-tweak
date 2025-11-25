@@ -13,7 +13,9 @@ export function World() {
     <Canvas
       frameloop="always"
       shadows="soft"
-      onCreated={({ scene }) => {
+      onCreated={({ scene, gl }) => {
+        scene.userData.renderer = gl;
+        scene.userData.procedural = {};
         setWorld(scene);
       }}
     >

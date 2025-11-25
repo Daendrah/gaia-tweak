@@ -25,7 +25,6 @@ const NumberField = memo(function NumberField({
   max,
   step,
 }: NumberFieldProps) {
-  // Sélecteurs optimisés
   const value = useComponentsStore(
     useCallback(
       state => state.componentInstances[componentKey]?.pending[paramKey] as number | undefined,
@@ -43,7 +42,6 @@ const NumberField = memo(function NumberField({
   const updateParameter = useComponentsStore(state => state.updateParameter);
   const resetParameter = useComponentsStore(state => state.resetParameter);
 
-  // Callbacks mémoïsés
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const newValue = e.target.value === '' ? 0 : Number(e.target.value);

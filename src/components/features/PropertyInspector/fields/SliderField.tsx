@@ -25,7 +25,6 @@ const SliderField = memo(function SliderField({
   max = 100,
   step = 1,
 }: SliderFieldProps) {
-  // Sélecteurs optimisés
   const value = useComponentsStore(
     useCallback(
       state => state.componentInstances[componentKey]?.pending[paramKey] as number | undefined,
@@ -43,7 +42,6 @@ const SliderField = memo(function SliderField({
   const updateParameter = useComponentsStore(state => state.updateParameter);
   const resetParameter = useComponentsStore(state => state.resetParameter);
 
-  // Callbacks mémoïsés
   const handleSliderChange = useCallback(
     (value: number | number[]) => {
       const finalValue = typeof value === 'number' ? value : value[0];
@@ -58,6 +56,7 @@ const SliderField = memo(function SliderField({
 
   const currentValue = value ?? min;
 
+  const showSteps = (max - min) / step <= 20;
   return (
     <FieldRow description={description} isModified={isModified} onReset={handleReset}>
       <div className="flex items-center h-14 flex-1">
@@ -70,6 +69,7 @@ const SliderField = memo(function SliderField({
           step={step}
           minValue={min}
           maxValue={max}
+          showSteps={showSteps}
           className="flex-1"
           classNames={{
             base: 'max-w-full',

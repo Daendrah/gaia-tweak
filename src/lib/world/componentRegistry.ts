@@ -1,5 +1,4 @@
 import {
-  lightingDescriptor,
   lightingDescriptor2,
   lightingDescriptor3,
   lightingDescriptor4,
@@ -7,6 +6,7 @@ import {
   lightingDescriptor6,
   lightingDescriptor7,
 } from '@/lib/world/components/lighting/lighting.descriptor';
+import { skyboxDescriptor } from '@/lib/world/components/skybox/skybox.descriptor';
 import { ComponentDescriptor, ParameterDefinition } from '@/types/worldTypes';
 
 export interface ComponentDefinition {
@@ -88,7 +88,7 @@ class ComponentRegistry {
 }
 
 export const componentRegistry = new ComponentRegistry([
-  lightingDescriptor,
+  skyboxDescriptor,
   lightingDescriptor2,
   lightingDescriptor3,
   lightingDescriptor4,

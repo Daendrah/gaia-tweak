@@ -19,7 +19,6 @@ const BooleanField = memo(function BooleanField({
   label,
   description,
 }: BooleanFieldProps) {
-  // Sélecteurs optimisés
   const value = useComponentsStore(
     useCallback(
       state => state.componentInstances[componentKey]?.pending[paramKey] as boolean | undefined,
@@ -37,7 +36,6 @@ const BooleanField = memo(function BooleanField({
   const updateParameter = useComponentsStore(state => state.updateParameter);
   const resetParameter = useComponentsStore(state => state.resetParameter);
 
-  // Callbacks mémoïsés
   const handleChange = useCallback(
     (checked: boolean) => {
       updateParameter(componentKey, paramKey, checked);
@@ -53,7 +51,7 @@ const BooleanField = memo(function BooleanField({
     <FieldRow description={description} isModified={isModified} onReset={handleReset}>
       <div className="flex items-center justify-between h-10 flex-1">
         <span className="text-xs text-foreground">{label}</span>
-        <Switch size="sm" isSelected={value} onValueChange={handleChange} />
+        <Switch size="sm" isSelected={value} onValueChange={handleChange} aria-label={label} />
       </div>
     </FieldRow>
   );

@@ -153,7 +153,6 @@ export const useComponentsStore = create<ComponentsState>((set, get) => ({
       const committedValue = instance.committed[paramKey];
       const currentValue = instance.pending[paramKey];
 
-      // Si le paramètre n'est pas modifié, ne rien faire
       if (currentValue === committedValue) {
         return state;
       }

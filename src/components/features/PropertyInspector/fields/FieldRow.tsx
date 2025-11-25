@@ -18,7 +18,13 @@ const FieldRow = memo(function FieldRow({
   onReset,
 }: FieldRowProps) {
   return (
-    <Tooltip content={description || ''} placement="left" delay={500} radius="sm">
+    <Tooltip
+      content={description || ''}
+      placement="left"
+      delay={500}
+      radius="sm"
+      triggerScaleOnOpen={false}
+    >
       <div className="grid grid-cols-[20px_1fr_20px] items-center gap-3 px-2 py-1 hover:bg-default-100 group">
         {/* Indicator */}
         <div className="w-5 shrink-0 flex justify-center">

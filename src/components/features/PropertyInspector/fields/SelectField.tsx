@@ -21,7 +21,6 @@ const SelectField = memo(function SelectField({
   description,
   items = [],
 }: SelectFieldProps) {
-  // Sélecteurs optimisés
   const value = useComponentsStore(
     useCallback(
       state => state.componentInstances[componentKey]?.pending[paramKey] as string | undefined,
@@ -39,7 +38,6 @@ const SelectField = memo(function SelectField({
   const updateParameter = useComponentsStore(state => state.updateParameter);
   const resetParameter = useComponentsStore(state => state.resetParameter);
 
-  // Callbacks mémoïsés
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
       updateParameter(componentKey, paramKey, e.target.value);
@@ -56,12 +54,13 @@ const SelectField = memo(function SelectField({
       <div className="flex items-center justify-between h-10 flex-1">
         <span className="text-xs text-foreground">{label}</span>
         <Select
+          aria-label={label}
           selectedKeys={value ? [value] : []}
           onChange={handleChange}
           size="sm"
           radius="sm"
           classNames={{
-            base: 'min-w-24',
+            base: 'min-w-48 w-fit',
             trigger: 'h-6 min-h-6',
             value: 'text-xs',
           }}

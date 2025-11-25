@@ -35,7 +35,7 @@ export function PropertyPanelFooter() {
   };
 
   return (
-    <DrawerFooter className="grid grid-cols-[1fr_auto] gap-2 px-2 py-2">
+    <DrawerFooter className="grid grid-cols-[1fr_auto] gap-4 px-4 py-2">
       <Button
         aria-label={'Apply'}
         color={'primary'}

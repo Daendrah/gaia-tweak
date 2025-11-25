@@ -15,12 +15,12 @@ export const ComponentButton = memo(function ComponentButton(props: ComponentBut
 
   return (
     <Tooltip
-      key={label}
       color="default"
       content={label}
       placement={'right'}
       radius="sm"
       offset={15}
+      triggerScaleOnOpen={false}
     >
       <Button
         aria-label={label}

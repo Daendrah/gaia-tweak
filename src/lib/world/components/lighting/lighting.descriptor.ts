@@ -4,14 +4,6 @@ import { lightingBuilder } from '@/lib/world/components/lighting/lighting.builde
 import { lightingParams } from '@/lib/world/components/lighting/lighting.types';
 import { ComponentDescriptor } from '@/types/worldTypes';
 
-export const lightingDescriptor: ComponentDescriptor = {
-  key: 'lighting',
-  name: 'Skybox',
-  icon: Box,
-  builder: lightingBuilder,
-  params: lightingParams,
-};
-
 export const lightingDescriptor2: ComponentDescriptor = {
   key: 'lighting2',
   name: 'Lighting',

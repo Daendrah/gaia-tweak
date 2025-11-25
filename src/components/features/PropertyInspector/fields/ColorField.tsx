@@ -1,6 +1,8 @@
 'use client';
 
-import React, { memo, useCallback, useMemo } from 'react';
+import { Popover, PopoverContent, PopoverTrigger } from '@heroui/react';
+import React, { memo, useCallback, useState } from 'react';
+import { HexColorPicker } from 'react-colorful';
 
 import FieldRow from '@/components/features/PropertyInspector/fields/FieldRow';
 import { useComponentsStore } from '@/store/componentsStore';
@@ -18,7 +20,8 @@ const ColorField = memo(function ColorField({
   label,
   description,
 }: ColorFieldProps) {
-  // Sélecteurs optimisés : seulement les valeurs nécessaires, pas l'objet entier
+  const [isOpen, setIsOpen] = useState(false);
+
   const value = useComponentsStore(
     useCallback(
       state => state.componentInstances[componentKey]?.pending[paramKey] as string | undefined,
@@ -37,10 +40,9 @@ const ColorField = memo(function ColorField({
   const updateParameter = useComponentsStore(state => state.updateParameter);
   const resetParameter = useComponentsStore(state => state.resetParameter);
 
-  // Callbacks mémoïsés pour éviter les re-renders de FieldRow
   const handleChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      updateParameter(componentKey, paramKey, event.target.value);
+    (newColor: string) => {
+      updateParameter(componentKey, paramKey, newColor);
     },
     [updateParameter, componentKey, paramKey]
   );
@@ -55,20 +57,34 @@ const ColorField = memo(function ColorField({
     <FieldRow description={description} isModified={isModified} onReset={handleReset}>
       <div className="flex items-center justify-between h-10 flex-1">
         <span className="text-xs text-foreground">{label}</span>
-        <div
-          className="w-5 h-5 border border-divider rounded cursor-pointer shrink-0 hover:border-default-500"
-          style={{ backgroundColor: currentValue }}
+        <Popover
+          isOpen={isOpen}
+          onOpenChange={setIsOpen}
+          placement="left"
+          offset={10}
+          triggerScaleOnOpen={false}
         >
-          <input
-            type="color"
-            value={currentValue}
-            onChange={handleChange}
-            className="w-full h-full opacity-0 cursor-pointer"
-            style={{
-              padding: 0,
-            }}
-          />
-        </div>
+          <PopoverTrigger>
+            <div
+              className="w-5 h-5 border border-divider rounded cursor-pointer shrink-0 hover:border-default-500 transition-colors"
+              style={{ backgroundColor: currentValue }}
+            />
+          </PopoverTrigger>
+          <PopoverContent className="p-0">
+            <div className="p-3">
+              <HexColorPicker color={currentValue} onChange={handleChange} />
+              <div className="mt-2 flex items-center gap-2">
+                <input
+                  type="text"
+                  value={currentValue}
+                  onChange={e => handleChange(e.target.value)}
+                  className="flex-1 px-2 py-1 text-xs bg-default-100 border border-divider rounded focus:outline-none focus:border-primary"
+                  placeholder="#000000"
+                />
+              </div>
+            </div>
+          </PopoverContent>
+        </Popover>
       </div>
     </FieldRow>
   );
