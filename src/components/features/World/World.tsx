@@ -1,5 +1,6 @@
 'use client';
 
+import * as THREE from 'three';
 import { OrbitControls } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 
@@ -15,11 +16,12 @@ export function World() {
       shadows="soft"
       onCreated={({ scene, gl }) => {
         scene.userData.renderer = gl;
-        scene.userData.procedural = {};
+        scene.userData.procedural = {
+          scene: new THREE.Scene(),
+        };
         setWorld(scene);
       }}
     >
-      <color attach="background" args={['#0076a5']} />
       <MetricsMonitor />
       <ambientLight intensity={0.6} />
       <mesh position={[0, 0, 0]} castShadow receiveShadow>

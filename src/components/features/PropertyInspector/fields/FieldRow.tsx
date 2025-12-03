@@ -26,15 +26,10 @@ const FieldRow = memo(function FieldRow({
       triggerScaleOnOpen={false}
     >
       <div className="grid grid-cols-[20px_1fr_20px] items-center gap-3 px-2 py-1 hover:bg-default-100 group">
-        {/* Indicator */}
         <div className="w-5 shrink-0 flex justify-center">
           {isModified && <div className="w-1.5 h-1.5 rounded-full bg-primary" />}
         </div>
-
-        {/* Field */}
         {children}
-
-        {/* Reset */}
         <div className="w-5 shrink-0 flex justify-center">
           {isModified && onReset && (
             <Button

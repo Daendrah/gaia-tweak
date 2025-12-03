@@ -31,7 +31,6 @@ export const skyboxBuilder: ComponentBuilder = {
           );
 
           context.world.userData.procedural.skybox = {
-            scene: new THREE.Scene(),
             renderTargets: {
               background: createRenderTarget(resolution),
               kuwahara: createRenderTarget(resolution),
@@ -42,10 +41,10 @@ export const skyboxBuilder: ComponentBuilder = {
       },
 
       {
-        name: 'Pass 1: Generating stylized background',
+        name: 'Generating background',
         execute: async context => {
           const skyboxData = context.world.userData.procedural.skybox;
-          if (!skyboxData.scene || !skyboxData.renderTargets.background) {
+          if (!context.world.userData.procedural.scene || !skyboxData.renderTargets.background) {
             throw new Error('Skybox initialization incomplete');
           }
 
@@ -53,7 +52,7 @@ export const skyboxBuilder: ComponentBuilder = {
             throw new Error('WebGL renderer not available');
           }
 
-          const scene = skyboxData.scene;
+          const scene = context.world.userData.procedural.scene;
           const cubeTarget = skyboxData.renderTargets.background;
           const cubeCamera = new THREE.CubeCamera(0.1, 10, cubeTarget);
 
@@ -112,10 +111,10 @@ export const skyboxBuilder: ComponentBuilder = {
       },
 
       {
-        name: 'Pass 2: Applying Kuwahara filter',
+        name: 'Applying Kuwahara filter',
         execute: async context => {
           const skyboxData = context.world.userData.procedural.skybox;
-          if (!skyboxData.scene || !skyboxData.renderTargets.kuwahara) {
+          if (!context.world.userData.procedural.scene || !skyboxData.renderTargets.kuwahara) {
             throw new Error('Skybox initialization incomplete');
           }
 
@@ -123,7 +122,7 @@ export const skyboxBuilder: ComponentBuilder = {
             throw new Error('WebGL renderer not available');
           }
 
-          const scene = skyboxData.scene;
+          const scene = context.world.userData.procedural.scene;
           const cubeTarget = skyboxData.renderTargets.kuwahara;
           const cubeCamera = new THREE.CubeCamera(0.1, 10, cubeTarget);
 
@@ -154,10 +153,10 @@ export const skyboxBuilder: ComponentBuilder = {
       },
 
       {
-        name: 'Pass 3: Generating star field',
+        name: 'Generating star field',
         execute: async context => {
           const skyboxData = context.world.userData.procedural.skybox;
-          if (!skyboxData.scene || !skyboxData.renderTargets.final) {
+          if (!context.world.userData.procedural.scene || !skyboxData.renderTargets.final) {
             throw new Error('Skybox initialization incomplete');
           }
 
@@ -165,7 +164,7 @@ export const skyboxBuilder: ComponentBuilder = {
             throw new Error('WebGL renderer not available');
           }
 
-          const scene = skyboxData.scene;
+          const scene = context.world.userData.procedural.scene;
           const cubeTarget = skyboxData.renderTargets.final;
           const cubeCamera = new THREE.CubeCamera(0.1, 10, cubeTarget);
 
@@ -186,26 +185,36 @@ export const skyboxBuilder: ComponentBuilder = {
                   ? skyboxData.renderTargets.kuwahara.texture
                   : skyboxData.renderTargets.background.texture,
               },
-              u_starsDensity: { value: getParameterValue(context.params, 'starsDensity', 0.8) },
-              u_starsGridScale: {
-                value: getParameterValue(context.params, 'starsGridScale', 20.0),
+              u_starsDensity: { value: getParameterValue(context.params, 'starsDensity', 0.85) },
+              u_starColorBase: {
+                value: hexToVec3(
+                  getParameterValue(context.params, 'starColorBase', '#ffffff') as string
+                ),
               },
-              u_starSizeBase: { value: getParameterValue(context.params, 'starSizeBase', 0.02) },
+              u_starColorTint1: {
+                value: hexToVec3(
+                  getParameterValue(context.params, 'starColorTint1', '#b3d9ff') as string
+                ),
+              },
+              u_starColorTint2: {
+                value: hexToVec3(
+                  getParameterValue(context.params, 'starColorTint2', '#ffd4a3') as string
+                ),
+              },
+              u_colorThreshold1: {
+                value: getParameterValue(context.params, 'colorThreshold1', 0.3),
+              },
+              u_colorThreshold2: {
+                value: getParameterValue(context.params, 'colorThreshold2', 0.7),
+              },
+              u_starBrightnessMin: {
+                value: getParameterValue(context.params, 'starBrightnessMin', 0.3),
+              },
+              u_starBrightnessMax: {
+                value: getParameterValue(context.params, 'starBrightnessMax', 1.0),
+              },
               u_starSizeVariation: {
                 value: getParameterValue(context.params, 'starSizeVariation', 0.03),
-              },
-              u_starColor: {
-                value: hexToVec3(
-                  getParameterValue(context.params, 'starColor', '#ffffff') as string
-                ),
-              },
-              u_starColorVariation: {
-                value: getParameterValue(context.params, 'starColorVariation', 0.4),
-              },
-              u_horizonColor: {
-                value: hexToVec3(
-                  getParameterValue(context.params, 'horizonColor', '#a7927a') as string
-                ),
               },
             },
             vertexShader: COMMON_VERTEX_SHADER,
@@ -265,11 +274,6 @@ const resetSkybox = (world: THREE.Scene): void => {
 
   const skyboxData = world.userData.procedural.skybox;
 
-  if (skyboxData.scene) {
-    skyboxData.scene.clear();
-    skyboxData.scene = null;
-  }
-
   const targets = skyboxData.renderTargets;
   if (targets) {
     if (targets.background) targets.background.dispose();
@@ -278,5 +282,6 @@ const resetSkybox = (world: THREE.Scene): void => {
     delete skyboxData.renderTargets;
   }
 
+  world.userData.procedural.scene.clear();
   delete world.userData.procedural.skybox;
 };
