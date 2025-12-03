@@ -13,8 +13,8 @@ export const STARS_FRAGMENT_SHADER = `
   uniform float u_starBrightnessMin;
   uniform float u_starSizeVariation;
   
-  in vec3 vPosition;
-  in vec2 vUV;
+  in vec3 v_position;
+  in vec2 v_uv;
   
   out vec4 fragColor;
   
@@ -64,7 +64,7 @@ export const STARS_FRAGMENT_SHADER = `
   }
   
   void main() {
-    vec3 direction = normalize(vPosition);
+    vec3 direction = normalize(v_position);
     vec3 backgroundColor = texture(u_backgroundTexture, direction).rgb;
     
     if (!u_enabled) {
@@ -72,7 +72,7 @@ export const STARS_FRAGMENT_SHADER = `
       return;
     }
     
-    vec4 stars = generateStars(vUV);
+    vec4 stars = generateStars(v_uv);
     
     float backgroundLuminance = dot(backgroundColor, vec3(0.299, 0.587, 0.114));
     float visibilityMask = smoothstep(0.4, 0.1, backgroundLuminance);

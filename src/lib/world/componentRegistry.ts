@@ -1,5 +1,5 @@
 import {
-  lightingDescriptor2,
+  lightingDescriptor,
   lightingDescriptor3,
   lightingDescriptor4,
   lightingDescriptor5,
@@ -89,7 +89,7 @@ class ComponentRegistry {
 
 export const componentRegistry = new ComponentRegistry([
   skyboxDescriptor,
-  lightingDescriptor2,
+  lightingDescriptor,
   lightingDescriptor3,
   lightingDescriptor4,
   lightingDescriptor5,

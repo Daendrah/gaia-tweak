@@ -6,8 +6,8 @@ export const KUWAHARA_FRAGMENT_SHADER = `
   uniform float u_filterRadius;
   uniform float u_sampleOffset;
   
-  in vec3 vPosition;
-  in vec2 vUV;
+  in vec3 v_position;
+  in vec2 v_uv;
   
   out vec4 fragColor;
   
@@ -86,7 +86,7 @@ export const KUWAHARA_FRAGMENT_SHADER = `
   }
   
   void main() {
-    vec3 direction = normalize(vPosition);
+    vec3 direction = normalize(v_position);
     
     if (!u_enabled) {
       fragColor = texture(u_backgroundTexture, direction);

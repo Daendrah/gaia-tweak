@@ -11,8 +11,8 @@ export const BACKGROUND_FRAGMENT_SHADER = `
   uniform float u_gradientFalloffTop;
   uniform float u_gradientFalloffBottom;
   
-  in vec3 vPosition;
-  in vec2 vUV;
+  in vec3 v_position;
+  in vec2 v_uv;
   
   out vec4 fragColor;
   
@@ -108,7 +108,7 @@ export const BACKGROUND_FRAGMENT_SHADER = `
       return;
     }
     
-    vec3 direction = normalize(vPosition);
+    vec3 direction = normalize(v_position);
     float density = fbm(direction, u_noiseScale, u_noiseOctaves) + 0.2;
     density = floor(density * u_posterizeSteps) / u_posterizeSteps;
     float height = direction.y * 0.5 + 0.5; 

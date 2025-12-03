@@ -5,6 +5,7 @@ import { OrbitControls } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 
 import { MetricsMonitor } from '@/components/features/MetricsOverlay/MetricsMonitor';
+import { PostProcessing } from '@/components/features/World/PostProcessing';
 import { useWorldStore } from '@/store/worldStore';
 
 export function World() {
@@ -14,6 +15,7 @@ export function World() {
     <Canvas
       frameloop="always"
       shadows="soft"
+      camera={{ fov: 50, near: 0.1, far: 1000 }}
       onCreated={({ scene, gl }) => {
         scene.userData.renderer = gl;
         scene.userData.procedural = {
@@ -29,6 +31,7 @@ export function World() {
         <meshStandardMaterial color={'#aaaaaa'} />
       </mesh>
       <OrbitControls />
+      <PostProcessing />
     </Canvas>
   );
 }
