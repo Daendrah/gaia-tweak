@@ -17,10 +17,10 @@ export const skyboxBuilder: ComponentBuilder = {
           function createRenderTarget(resolution: number): THREE.WebGLCubeRenderTarget {
             return new THREE.WebGLCubeRenderTarget(resolution, {
               format: THREE.RGBAFormat,
-              type: THREE.FloatType,
+              type: THREE.HalfFloatType,
               colorSpace: THREE.SRGBColorSpace,
-              minFilter: THREE.LinearFilter,
-              magFilter: THREE.LinearFilter,
+              minFilter: THREE.NearestFilter,
+              magFilter: THREE.NearestFilter,
             });
           }
 
