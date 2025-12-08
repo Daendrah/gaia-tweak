@@ -109,13 +109,11 @@ export const lightingBuilder: ComponentBuilder = {
           const sunSize = getParameterValue(context.params, 'sunSize', 7);
           const geometry = mesh.geometry as THREE.SphereGeometry;
 
-          // Only recreate geometry if size changed
           if (geometry.parameters.radius !== sunSize) {
             mesh.geometry.dispose();
             mesh.geometry = new THREE.SphereGeometry(sunSize, 64, 64);
           }
 
-          // Update shader uniforms
           const material = mesh.material as THREE.ShaderMaterial;
           const sunInnerColor = getParameterValue(context.params, 'sunInnerColor', '#ff8800');
           const sunOuterColor = getParameterValue(context.params, 'sunOuterColor', '#ffbc05');
@@ -152,13 +150,11 @@ export const lightingBuilder: ComponentBuilder = {
 const createSunObjects = (
   world: THREE.Scene
 ): { light: THREE.DirectionalLight; mesh: THREE.Mesh } => {
-  // Create directional light
   const light = new THREE.DirectionalLight(0xffffff, 0.9);
   light.position.set(100, 80, 50);
   light.castShadow = true;
   light.name = SUN_LIGHT_NAME;
 
-  // Initialize shadow settings
   light.shadow.mapSize.width = 4096;
   light.shadow.mapSize.height = 4096;
   light.shadow.camera.near = 1;
@@ -174,7 +170,6 @@ const createSunObjects = (
 
   world.add(light);
 
-  // Create sun visual mesh
   const geometry = new THREE.SphereGeometry(7, 64, 64);
   const material = new THREE.ShaderMaterial({
     uniforms: {
@@ -217,7 +212,6 @@ const resetLighting = (world: THREE.Scene): void => {
     }
   }
 
-  // Clean up postprocessing data
   if (world.userData.procedural?.postprocessing) {
     delete world.userData.procedural.postprocessing;
   }

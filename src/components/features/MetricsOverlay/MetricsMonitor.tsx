@@ -1,7 +1,7 @@
 'use client';
 
 import { useFrame, useThree } from '@react-three/fiber';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { useMetricsStore } from '@/store/metricsStore';
 
@@ -18,6 +18,10 @@ export function MetricsMonitor() {
   const frameCount = useRef(0);
   const lastUpdate = useRef(performance.now());
 
+  useEffect(() => {
+    gl.info.autoReset = false;
+  }, [gl]);
+
   useFrame(() => {
     frameCount.current += 1;
     const now = performance.now();
@@ -31,10 +35,11 @@ export function MetricsMonitor() {
           : 0;
 
       const info = gl.info;
-      const triangleCount = info.render.triangles;
-      const drawCalls = info.render.calls;
+      const triangleCount = info.render.triangles / fps;
+      const drawCalls = info.render.calls / fps;
 
       setStats(fps, memoryUsage, triangleCount, drawCalls);
+      gl.info.reset();
 
       frameCount.current = 0;
       lastUpdate.current = now;

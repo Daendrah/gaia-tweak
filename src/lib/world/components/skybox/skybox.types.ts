@@ -6,7 +6,7 @@ export const skyboxParams: ParameterDefinition[] = [
     label: 'Cube Texture Resolution',
     description: 'Resolution of each face of the cube texture (higher = better quality, slower)',
     type: ParameterType.SELECT,
-    value: '2048',
+    value: '1024',
     items: ['512', '1024', '2048', '4096'],
     section: 'Quality',
   },
@@ -23,7 +23,7 @@ export const skyboxParams: ParameterDefinition[] = [
     label: 'Background Color',
     description: 'Deep atmospheric blue color',
     type: ParameterType.COLOR,
-    value: '#102e49',
+    value: '#0b273b',
     section: 'Background',
   },
   {
@@ -31,7 +31,7 @@ export const skyboxParams: ParameterDefinition[] = [
     label: 'Mid Color',
     description: 'Transition cyan-blue color',
     type: ParameterType.COLOR,
-    value: '#113c67',
+    value: '#12364c',
     section: 'Background',
   },
   {
