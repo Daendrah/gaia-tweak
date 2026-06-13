@@ -51,14 +51,11 @@ export const useWorldStore = create<WorldState>((set, get) => ({
       throw new Error(`Instance ${key} not found`);
     }
 
-    const builder = componentRegistry.getDescriptor(key)?.builder;
-    if (!builder) throw new Error(`Descriptor ${key} not found`);
-
-    const submitCommand = useCommandQueueStore.getState().submitCommand;
-    const command = builder.generateCommand();
-
     const descriptor = componentRegistry.getDescriptor(key);
     if (!descriptor) throw new Error(`Descriptor ${key} not found`);
+
+    const command = descriptor.builder.generateCommand();
+    const submitCommand = useCommandQueueStore.getState().submitCommand;
 
     const params: Record<string, ParameterValue> = {};
     descriptor.params.forEach(param => {

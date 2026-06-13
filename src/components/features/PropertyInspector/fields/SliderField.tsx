@@ -1,10 +1,10 @@
 'use client';
 
 import { Slider } from '@heroui/react';
-import React, { memo, useCallback } from 'react';
+import { memo, useCallback } from 'react';
 
 import FieldRow from '@/components/features/PropertyInspector/fields/FieldRow';
-import { useComponentsStore } from '@/store/componentsStore';
+import { useFieldParam } from '@/components/features/PropertyInspector/fields/useFieldParam';
 
 interface SliderFieldProps {
   componentKey: string;
@@ -25,58 +25,36 @@ const SliderField = memo(function SliderField({
   max = 100,
   step = 1,
 }: SliderFieldProps) {
-  const value = useComponentsStore(
-    useCallback(
-      state => state.componentInstances[componentKey]?.pending[paramKey] as number | undefined,
-      [componentKey, paramKey]
-    )
-  );
-  const committedValue = useComponentsStore(
-    useCallback(
-      state => state.componentInstances[componentKey]?.committed[paramKey] as number | undefined,
-      [componentKey, paramKey]
-    )
-  );
-  const isModified = value !== committedValue;
+  const { value, isModified, set, reset } = useFieldParam<number>(componentKey, paramKey);
 
-  const updateParameter = useComponentsStore(state => state.updateParameter);
-  const resetParameter = useComponentsStore(state => state.resetParameter);
-
-  const handleSliderChange = useCallback(
-    (value: number | number[]) => {
-      const finalValue = typeof value === 'number' ? value : value[0];
-      updateParameter(componentKey, paramKey, finalValue);
-    },
-    [updateParameter, componentKey, paramKey]
+  const handleChange = useCallback(
+    (v: number | number[]) => set(typeof v === 'number' ? v : v[0]),
+    [set]
   );
-
-  const handleReset = useCallback(() => {
-    resetParameter(componentKey, paramKey);
-  }, [resetParameter, componentKey, paramKey]);
 
   const currentValue = value ?? min;
 
-  const showSteps = (max - min) / step <= 20;
   return (
-    <FieldRow description={description} isModified={isModified} onReset={handleReset}>
+    <FieldRow description={description} isModified={isModified} onReset={reset}>
       <div className="flex items-center h-14 flex-1">
         <Slider
-          label={label}
           aria-label={label}
-          size="sm"
           value={currentValue}
-          onChange={handleSliderChange}
+          onChange={handleChange}
           step={step}
           minValue={min}
           maxValue={max}
-          showSteps={showSteps}
           className="flex-1"
-          classNames={{
-            base: 'max-w-full',
-            label: 'text-xs',
-            value: 'text-xs',
-          }}
-        />
+        >
+          <div className="flex justify-between text-xs mb-1">
+            <span>{label}</span>
+            <Slider.Output />
+          </div>
+          <Slider.Track>
+            <Slider.Fill />
+            <Slider.Thumb />
+          </Slider.Track>
+        </Slider>
       </div>
     </FieldRow>
   );

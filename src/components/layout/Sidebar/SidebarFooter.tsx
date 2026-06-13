@@ -7,10 +7,18 @@ import React, { memo, useCallback, useEffect, useState } from 'react';
 
 import { useWorldStore } from '@/store/worldStore';
 
+type ButtonColor = 'default' | 'primary' | 'danger';
+
+const colorToVariant: Record<ButtonColor, 'ghost' | 'secondary' | 'danger-soft'> = {
+  default: 'ghost',
+  primary: 'secondary',
+  danger: 'danger-soft',
+};
+
 interface FooterButtonProps {
   icon: React.ElementType;
   label: string;
-  color?: 'default' | 'primary' | 'danger';
+  color?: ButtonColor;
   onClick: () => void;
 }
 
@@ -18,25 +26,21 @@ const FooterButton = memo(function FooterButton(props: FooterButtonProps) {
   const { onClick, label, icon, color = 'default' } = props;
 
   return (
-    <Tooltip
-      key={label}
-      color="default"
-      content={label}
-      placement={'right'}
-      radius="sm"
-      offset={15}
-    >
-      <Button
-        aria-label={label}
-        className="size-10"
-        color={color}
-        isIconOnly
-        onPress={onClick}
-        radius="sm"
-        variant={'light'}
-      >
-        {React.createElement(icon, { size: 20 })}
-      </Button>
+    <Tooltip>
+      <Tooltip.Trigger>
+        <Button
+          aria-label={label}
+          className="w-10 h-10 rounded-sm"
+          variant={colorToVariant[color]}
+          isIconOnly
+          onPress={onClick}
+        >
+          {React.createElement(icon, { size: 20 })}
+        </Button>
+      </Tooltip.Trigger>
+      <Tooltip.Content placement="right" offset={15} className="rounded-sm">
+        {label}
+      </Tooltip.Content>
     </Tooltip>
   );
 });

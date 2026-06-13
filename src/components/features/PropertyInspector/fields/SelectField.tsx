@@ -1,10 +1,10 @@
 'use client';
 
-import { Select, SelectItem } from '@heroui/react';
-import React, { memo, useCallback } from 'react';
+import { ListBox, ListBoxItem, Select } from '@heroui/react';
+import { Key, memo, useCallback } from 'react';
 
 import FieldRow from '@/components/features/PropertyInspector/fields/FieldRow';
-import { useComponentsStore } from '@/store/componentsStore';
+import { useFieldParam } from '@/components/features/PropertyInspector/fields/useFieldParam';
 
 interface SelectFieldProps {
   componentKey: string;
@@ -21,53 +21,33 @@ const SelectField = memo(function SelectField({
   description,
   items = [],
 }: SelectFieldProps) {
-  const value = useComponentsStore(
-    useCallback(
-      state => state.componentInstances[componentKey]?.pending[paramKey] as string | undefined,
-      [componentKey, paramKey]
-    )
-  );
-  const committedValue = useComponentsStore(
-    useCallback(
-      state => state.componentInstances[componentKey]?.committed[paramKey] as string | undefined,
-      [componentKey, paramKey]
-    )
-  );
-  const isModified = value !== committedValue;
+  const { value, isModified, set, reset } = useFieldParam<string>(componentKey, paramKey);
 
-  const updateParameter = useComponentsStore(state => state.updateParameter);
-  const resetParameter = useComponentsStore(state => state.resetParameter);
-
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) => {
-      updateParameter(componentKey, paramKey, e.target.value);
-    },
-    [updateParameter, componentKey, paramKey]
-  );
-
-  const handleReset = useCallback(() => {
-    resetParameter(componentKey, paramKey);
-  }, [resetParameter, componentKey, paramKey]);
+  const handleChange = useCallback((key: Key) => set(String(key)), [set]);
 
   return (
-    <FieldRow description={description} isModified={isModified} onReset={handleReset}>
+    <FieldRow description={description} isModified={isModified} onReset={reset}>
       <div className="flex items-center justify-between h-10 flex-1">
         <span className="text-xs text-foreground">{label}</span>
         <Select
           aria-label={label}
-          selectedKeys={value ? [value] : []}
-          onChange={handleChange}
-          size="sm"
-          radius="sm"
-          classNames={{
-            base: 'min-w-48 w-fit',
-            trigger: 'h-6 min-h-6',
-            value: 'text-xs',
-          }}
+          selectedKey={value ?? ''}
+          onSelectionChange={handleChange}
+          className="min-w-48 w-fit"
         >
-          {items.map(item => (
-            <SelectItem key={item}>{item}</SelectItem>
-          ))}
+          <Select.Trigger className="h-6 min-h-6 text-xs rounded-sm">
+            <Select.Value />
+            <Select.Indicator />
+          </Select.Trigger>
+          <Select.Popover>
+            <ListBox>
+              {items.map(item => (
+                <ListBoxItem key={item} id={item}>
+                  {item}
+                </ListBoxItem>
+              ))}
+            </ListBox>
+          </Select.Popover>
         </Select>
       </div>
     </FieldRow>

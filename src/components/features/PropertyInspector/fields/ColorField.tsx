@@ -1,11 +1,11 @@
 'use client';
 
-import { Popover, PopoverContent, PopoverTrigger } from '@heroui/react';
-import React, { memo, useCallback, useState } from 'react';
+import { Popover } from '@heroui/react';
+import { ChangeEvent, memo, useCallback, useState } from 'react';
 import { HexColorPicker } from 'react-colorful';
 
 import FieldRow from '@/components/features/PropertyInspector/fields/FieldRow';
-import { useComponentsStore } from '@/store/componentsStore';
+import { useFieldParam } from '@/components/features/PropertyInspector/fields/useFieldParam';
 
 interface ColorFieldProps {
   componentKey: string;
@@ -21,69 +21,39 @@ const ColorField = memo(function ColorField({
   description,
 }: ColorFieldProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const { value, isModified, set, reset } = useFieldParam<string>(componentKey, paramKey);
 
-  const value = useComponentsStore(
-    useCallback(
-      state => state.componentInstances[componentKey]?.pending[paramKey] as string | undefined,
-      [componentKey, paramKey]
-    )
-  );
-  const committedValue = useComponentsStore(
-    useCallback(
-      state => state.componentInstances[componentKey]?.committed[paramKey] as string | undefined,
-      [componentKey, paramKey]
-    )
-  );
-
-  const isModified = value !== committedValue;
-
-  const updateParameter = useComponentsStore(state => state.updateParameter);
-  const resetParameter = useComponentsStore(state => state.resetParameter);
-
-  const handleChange = useCallback(
-    (newColor: string) => {
-      updateParameter(componentKey, paramKey, newColor);
-    },
-    [updateParameter, componentKey, paramKey]
-  );
-
-  const handleReset = useCallback(() => {
-    resetParameter(componentKey, paramKey);
-  }, [resetParameter, componentKey, paramKey]);
+  const handleInput = useCallback((e: ChangeEvent<HTMLInputElement>) => set(e.target.value), [set]);
 
   const currentValue = value ?? '#000000';
 
   return (
-    <FieldRow description={description} isModified={isModified} onReset={handleReset}>
+    <FieldRow description={description} isModified={isModified} onReset={reset}>
       <div className="flex items-center justify-between h-10 flex-1">
         <span className="text-xs text-foreground">{label}</span>
-        <Popover
-          isOpen={isOpen}
-          onOpenChange={setIsOpen}
-          placement="left"
-          offset={10}
-          triggerScaleOnOpen={false}
-        >
-          <PopoverTrigger>
+        <Popover isOpen={isOpen} onOpenChange={setIsOpen}>
+          <Popover.Trigger>
             <div
-              className="w-5 h-5 border border-divider rounded cursor-pointer shrink-0 hover:border-default-500 transition-colors"
+              className="w-5 h-5 border border-border rounded cursor-pointer shrink-0 hover:border-border-secondary transition-colors"
               style={{ backgroundColor: currentValue }}
             />
-          </PopoverTrigger>
-          <PopoverContent className="p-0">
-            <div className="p-3">
-              <HexColorPicker color={currentValue} onChange={handleChange} />
-              <div className="mt-2 flex items-center gap-2">
-                <input
-                  type="text"
-                  value={currentValue}
-                  onChange={e => handleChange(e.target.value)}
-                  className="flex-1 px-2 py-1 text-xs bg-default-100 border border-divider rounded focus:outline-none focus:border-primary"
-                  placeholder="#000000"
-                />
+          </Popover.Trigger>
+          <Popover.Content placement="left" offset={10}>
+            <Popover.Dialog>
+              <div className="p-3">
+                <HexColorPicker color={currentValue} onChange={set} />
+                <div className="mt-2 flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={currentValue}
+                    onChange={handleInput}
+                    className="flex-1 px-2 py-1 text-xs bg-surface-secondary border border-border rounded focus:outline-none focus:border-accent"
+                    placeholder="#000000"
+                  />
+                </div>
               </div>
-            </div>
-          </PopoverContent>
+            </Popover.Dialog>
+          </Popover.Content>
         </Popover>
       </div>
     </FieldRow>

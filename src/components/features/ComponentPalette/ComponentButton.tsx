@@ -1,6 +1,6 @@
 'use client';
 
-import { Badge, Button, Tooltip } from '@heroui/react';
+import { Button, Tooltip } from '@heroui/react';
 import React, { memo } from 'react';
 
 interface ComponentButtonProps {
@@ -10,31 +10,28 @@ interface ComponentButtonProps {
   isSelected: boolean;
 }
 
-export const ComponentButton = memo(function ComponentButton(props: ComponentButtonProps) {
-  const { onClick, label, icon, isSelected } = props;
-
+export const ComponentButton = memo(function ComponentButton({
+  onClick,
+  label,
+  icon,
+  isSelected,
+}: ComponentButtonProps) {
   return (
-    <Tooltip
-      color="default"
-      content={label}
-      placement={'right'}
-      radius="sm"
-      offset={15}
-      triggerScaleOnOpen={false}
-    >
-      <Button
-        aria-label={label}
-        className="size-10"
-        color={isSelected ? 'primary' : 'default'}
-        isIconOnly
-        onPress={onClick}
-        radius="sm"
-        variant={isSelected ? 'flat' : 'light'}
-      >
-        {React.createElement(icon, { size: 20 })}
-      </Button>
+    <Tooltip>
+      <Tooltip.Trigger>
+        <Button
+          aria-label={label}
+          className="size-10 rounded-sm"
+          variant={isSelected ? 'primary' : 'ghost'}
+          isIconOnly
+          onPress={onClick}
+        >
+          {React.createElement(icon, { size: 20 })}
+        </Button>
+      </Tooltip.Trigger>
+      <Tooltip.Content placement="right" offset={15} className="rounded-sm">
+        {label}
+      </Tooltip.Content>
     </Tooltip>
   );
 });
-
-ComponentButton.displayName = 'ComponentButton';

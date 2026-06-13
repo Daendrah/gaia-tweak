@@ -15,7 +15,7 @@ interface PropertyFieldProps {
   definition: ParameterDefinition;
 }
 
-export const PropertyField = memo(function PropertyField({
+const PropertyField = memo(function PropertyField({
   componentKey,
   paramKey,
   definition,
@@ -82,3 +82,5 @@ export const PropertyField = memo(function PropertyField({
       return null;
   }
 });
+
+export default PropertyField;

@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, CardBody } from '@heroui/react';
+import { Card } from '@heroui/react';
 import { Brush, Cpu, MemoryStick, Triangle } from 'lucide-react';
 import { memo } from 'react';
 
@@ -30,15 +30,15 @@ const TrianglesMetric = memo(() => {
 
 export function MetricsOverlay() {
   return (
-    <Card className="absolute bottom-2 left-16 bg-background" radius="sm" shadow="sm">
-      <CardBody className="p-0">
+    <Card className="absolute bottom-2 left-16 bg-background rounded-sm">
+      <Card.Content className="p-0">
         <div className="grid grid-cols-2 gap-2 p-2">
           <FpsMetric />
           <MemoryMetric />
           <DrawCallsMetric />
           <TrianglesMetric />
         </div>
-      </CardBody>
+      </Card.Content>
     </Card>
   );
 }

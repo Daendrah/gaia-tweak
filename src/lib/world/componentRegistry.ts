@@ -7,6 +7,9 @@ import {
   lightingDescriptor7,
 } from '@/lib/world/components/lighting/lighting.descriptor';
 import { skyboxDescriptor } from '@/lib/world/components/skybox/skybox.descriptor';
+import { terrainDescriptor } from '@/lib/world/components/terrain/terrain.descriptor';
+import { waterDescriptor } from '@/lib/world/components/water/water.descriptor';
+import { biomesDescriptor } from '@/lib/world/components/biomes/biomes.descriptor';
 import { ComponentDescriptor, ParameterDefinition } from '@/types/worldTypes';
 
 export interface ComponentDefinition {
@@ -41,7 +44,6 @@ class ComponentRegistry {
     descriptors.forEach(descriptor => {
       this.register(descriptor);
     });
-    console.log(`Component registry initialized with ${descriptors.length} components`);
   }
 
   private register(descriptor: ComponentDescriptor): void {
@@ -90,6 +92,9 @@ class ComponentRegistry {
 export const componentRegistry = new ComponentRegistry([
   skyboxDescriptor,
   lightingDescriptor,
+  terrainDescriptor,
+  waterDescriptor,
+  biomesDescriptor,
   lightingDescriptor3,
   lightingDescriptor4,
   lightingDescriptor5,

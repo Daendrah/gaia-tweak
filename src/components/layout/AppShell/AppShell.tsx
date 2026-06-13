@@ -6,10 +6,10 @@ import { Viewport } from '@/components/layout/Viewport/Viewport';
 
 export function AppShell() {
   return (
-    <div className="flex flex-row w-screen h-screen  text-sm">
+    <div className="flex flex-row w-screen h-screen text-sm">
       <Sidebar />
       <Viewport />
-      <PropertyPanel />
+      {/* <PropertyPanel /> */}
     </div>
   );
 }

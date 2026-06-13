@@ -12,7 +12,7 @@ export const skyboxBuilder: ComponentBuilder = {
   generateCommand: (): GenerationCommand => {
     const steps: CommandStep[] = [
       {
-        name: 'Initializing skybox generation',
+        name: 'Initialize skybox generation',
         execute: async context => {
           function createRenderTarget(resolution: number): THREE.WebGLCubeRenderTarget {
             return new THREE.WebGLCubeRenderTarget(resolution, {
@@ -41,7 +41,7 @@ export const skyboxBuilder: ComponentBuilder = {
       },
 
       {
-        name: 'Generating background',
+        name: 'Generate background',
         execute: async context => {
           const skyboxData = context.world.userData.procedural.skybox;
           if (!context.world.userData.procedural.scene || !skyboxData.renderTargets.background) {
@@ -111,7 +111,7 @@ export const skyboxBuilder: ComponentBuilder = {
       },
 
       {
-        name: 'Applying Kuwahara filter',
+        name: 'Apply Kuwahara filter',
         execute: async context => {
           const skyboxData = context.world.userData.procedural.skybox;
           if (!context.world.userData.procedural.scene || !skyboxData.renderTargets.kuwahara) {
@@ -153,7 +153,7 @@ export const skyboxBuilder: ComponentBuilder = {
       },
 
       {
-        name: 'Generating star field',
+        name: 'Generate star field',
         execute: async context => {
           const skyboxData = context.world.userData.procedural.skybox;
           if (!context.world.userData.procedural.scene || !skyboxData.renderTargets.final) {
@@ -235,7 +235,7 @@ export const skyboxBuilder: ComponentBuilder = {
       },
 
       {
-        name: 'Applying skybox to scene',
+        name: 'Apply skybox to scene',
         execute: async context => {
           context.world.background =
             context.world.userData.procedural.skybox.renderTargets.final.texture;
@@ -243,7 +243,7 @@ export const skyboxBuilder: ComponentBuilder = {
       },
 
       {
-        name: 'Finalization',
+        name: 'Finalize skybox',
         execute: async context => {
           if (!context.world.background) {
             throw new Error('Skybox application failed');

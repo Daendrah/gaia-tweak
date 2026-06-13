@@ -20,17 +20,19 @@ export function PropertyPanelHeader() {
     <DrawerHeader className="grid grid-cols-[auto_1fr_auto] items-center px-2 py-2 gap-2">
       {React.createElement(componentDefinition.icon, { size: 32, color: 'currentColor' })}
       <span className="text-2xl">{componentDefinition.name}</span>
-      <Tooltip key={'drawer-close'} color="default" content={'Close'} radius="sm">
-        <Button
-          aria-label={'Close'}
-          color={'default'}
-          isIconOnly
-          onPress={() => selectComponent(null)}
-          radius="sm"
-          variant={'light'}
-        >
-          <X size={20} />
-        </Button>
+      <Tooltip>
+        <Tooltip.Trigger>
+          <Button
+            aria-label="Close"
+            variant="ghost"
+            isIconOnly
+            onPress={() => selectComponent(null)}
+            className="rounded-sm"
+          >
+            <X size={20} />
+          </Button>
+        </Tooltip.Trigger>
+        <Tooltip.Content placement="left">Close</Tooltip.Content>
       </Tooltip>
     </DrawerHeader>
   );

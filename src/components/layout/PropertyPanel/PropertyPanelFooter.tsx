@@ -1,7 +1,7 @@
 'use client';
 
-import { Check, RotateCcw } from 'lucide-react';
 import { Button, DrawerFooter } from '@heroui/react';
+import { Check, RotateCcw } from 'lucide-react';
 
 import { componentRegistry } from '@/lib/world/componentRegistry';
 import { useComponentsStore } from '@/store/componentsStore';
@@ -26,36 +26,26 @@ export function PropertyPanelFooter() {
   const componentDefinition = componentRegistry.getDefinition(componentKey);
   if (!componentDefinition) return null;
 
-  const handleApply = () => {
-    generateComponent(componentKey);
-  };
-
-  const handleReset = () => {
-    clearComponent(componentKey);
-  };
-
   return (
     <DrawerFooter className="grid grid-cols-[1fr_auto] gap-4 px-4 py-2">
       <Button
-        aria-label={'Apply'}
-        color={'primary'}
-        startContent={<Check size={20} />}
-        onPress={handleApply}
-        radius="sm"
-        variant={'solid'}
+        aria-label="Apply"
+        variant="primary"
+        onPress={() => generateComponent(componentKey)}
         isDisabled={!hasChanges}
+        className="rounded-sm"
       >
+        <Check size={20} />
         Apply
       </Button>
       <Button
-        aria-label={'Reset'}
-        color={'danger'}
-        startContent={<RotateCcw size={20} />}
-        onPress={handleReset}
-        radius="sm"
-        variant={'solid'}
+        aria-label="Reset"
+        variant="danger"
+        onPress={() => clearComponent(componentKey)}
         isDisabled={!isActive}
+        className="rounded-sm"
       >
+        <RotateCcw size={20} />
         Reset
       </Button>
     </DrawerFooter>

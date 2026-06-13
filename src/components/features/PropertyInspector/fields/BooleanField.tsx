@@ -1,10 +1,10 @@
 'use client';
 
 import { Switch } from '@heroui/react';
-import React, { memo, useCallback } from 'react';
+import { memo } from 'react';
 
 import FieldRow from '@/components/features/PropertyInspector/fields/FieldRow';
-import { useComponentsStore } from '@/store/componentsStore';
+import { useFieldParam } from '@/components/features/PropertyInspector/fields/useFieldParam';
 
 interface BooleanFieldProps {
   componentKey: string;
@@ -19,39 +19,17 @@ const BooleanField = memo(function BooleanField({
   label,
   description,
 }: BooleanFieldProps) {
-  const value = useComponentsStore(
-    useCallback(
-      state => state.componentInstances[componentKey]?.pending[paramKey] as boolean | undefined,
-      [componentKey, paramKey]
-    )
-  );
-  const committedValue = useComponentsStore(
-    useCallback(
-      state => state.componentInstances[componentKey]?.committed[paramKey] as boolean | undefined,
-      [componentKey, paramKey]
-    )
-  );
-  const isModified = value !== committedValue;
-
-  const updateParameter = useComponentsStore(state => state.updateParameter);
-  const resetParameter = useComponentsStore(state => state.resetParameter);
-
-  const handleChange = useCallback(
-    (checked: boolean) => {
-      updateParameter(componentKey, paramKey, checked);
-    },
-    [updateParameter, componentKey, paramKey]
-  );
-
-  const handleReset = useCallback(() => {
-    resetParameter(componentKey, paramKey);
-  }, [resetParameter, componentKey, paramKey]);
+  const { value, isModified, set, reset } = useFieldParam<boolean>(componentKey, paramKey);
 
   return (
-    <FieldRow description={description} isModified={isModified} onReset={handleReset}>
+    <FieldRow description={description} isModified={isModified} onReset={reset}>
       <div className="flex items-center justify-between h-10 flex-1">
         <span className="text-xs text-foreground">{label}</span>
-        <Switch size="sm" isSelected={value} onValueChange={handleChange} aria-label={label} />
+        <Switch isSelected={value} onChange={set} aria-label={label} size="sm">
+          <Switch.Control>
+            <Switch.Thumb />
+          </Switch.Control>
+        </Switch>
       </div>
     </FieldRow>
   );

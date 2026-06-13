@@ -15,7 +15,12 @@ export function World() {
     <Canvas
       frameloop="always"
       shadows="soft"
-      camera={{ fov: 50, near: 0.1, far: 1000 }}
+      camera={{
+        fov: 50,
+        near: 0.1,
+        far: 1000,
+        position: [161.09497679328308, 57.617197762841045, 19.56047156938446],
+      }}
       onCreated={({ scene, gl }) => {
         scene.userData.renderer = gl;
         scene.userData.procedural = {
@@ -26,12 +31,9 @@ export function World() {
     >
       <MetricsMonitor />
       <ambientLight intensity={0.6} />
-      <mesh position={[0, 0, 0]} castShadow receiveShadow>
-        <boxGeometry args={[2, 2, 2]} />
-        <meshStandardMaterial color={'#aaaaaa'} />
-      </mesh>
       <OrbitControls />
-      <PostProcessing />
+      {/* <PostProcessing /> */}
+      <gridHelper args={[100, 100]} position={[0, 0, 0]} />
     </Canvas>
   );
 }
